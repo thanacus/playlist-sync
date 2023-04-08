@@ -8,19 +8,7 @@
     }
   ],
   "scripts": [
-    "scripts/playlist-sync.js",
-    "scripts/compendium-wrapper.js",
-    "scripts/playlist-wrapper.js"
-  ],
-  "styles": [
-    "styles/playlist-sync.css"
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    }
+    "scripts/playlist-sync.js"
   ],
   "version": "1",
   "minimumCoreVersion": "0.8.8"
