@@ -8,7 +8,9 @@
     }
   ],
   "scripts": [
-    "scripts/hello.js"
+    "scripts/playlist-sync.js",
+    "scripts/compendium-wrapper.js",
+    "scripts/playlist-wrapper.js"
   ],
   "styles": [
     "styles/playlist-sync.css"
