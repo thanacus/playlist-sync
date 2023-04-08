@@ -20,22 +20,43 @@ class PlaylistSync {
         console.log(this.ID, '|', ...args);
         }
     }
+
+    static pushCompendiumEntriesIntoExistingPlaylists(pack) {
+        pack.getDocuments().then(playlists => {
+            playlists.forEach(packPlaylist => {
+                let gamePlaylist = game.playlists.getName(packPlaylist.name);
+                if(typeof gamePlaylist === 'undefined') {
+                    return;
+                }
+
+                let updatedTrackList = [];
+                packPlaylist.getEmbeddedCollection("PlaylistSound").forEach(sound => {
+                    updatedTrackList.push(sound.clone());
+                })
+
+                gamePlaylist.deleteEmbeddedDocuments("PlaylistSound", gamePlaylist.sounds.map(s => s.id)).then(() => {
+                    gamePlaylist.createEmbeddedDocuments("PlaylistSound", updatedTrackList).then(() => {
+                        ui.notifications.info(`${gamePlaylist.name} updated from compendium.`);
+                    });
+                });
+            });
+        });
+    }
 }
 
-const getCompendiumNames = function(compendiumCollection) {
-    return compendiumCollection.index.map(idx => idx.name)
-}
-
-/**
- * Register our module's debug flag with developer mode's custom hook
- */
-Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
-    registerPackageDebugFlag(PlaylistSync.ID);
-});
-
-Hooks.on("renderCompendium", (compendiumApp, html, appData) => {
-    console.log(`renderCompendium called...`);
-    compendiumApp.getData().then(data => {
-        console.log(getCompendiumNames(data));
+Hooks.on('getCompendiumDirectoryEntryContext', (html, entryOptions) => {
+    entryOptions.push({
+        name: "Synchronize to Playlists",
+        callback: (li) => {
+            let packId = $(li).attr("data-pack");
+            let pack = game.packs.get(packId);
+            PlaylistSync.pushCompendiumEntriesIntoExistingPlaylists(pack);
+        },
+        icon: '<i class="fas fa-music"></i>',
+        condition: (li) => {
+            let packId = $(li).attr("data-pack");
+            let pack = game.packs.get(packId);
+            return game.user.isGM && pack.metadata.type === 'Playlist';
+        }
     });
 });
