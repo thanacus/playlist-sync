@@ -1,0 +1,25 @@
+{
+  "name": "playlist-sync",
+  "title": "Playlist Compendium Sync",
+  "description": "Synchronizes playlists from compendiums to game worlds",
+  "authors": [
+    {
+      "name": "thanacus"
+    }
+  ],
+  "scripts": [
+    "scripts/hello.js"
+  ],
+  "styles": [
+    "styles/playlist-sync.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    }
+  ],
+  "version": "1",
+  "minimumCoreVersion": "0.8.8"
+}
