@@ -1,26 +1,4 @@
-console.log('playlist-sync | Loaded main.js');
-
 class PlaylistSync {
-    static ID = 'playlist-sync';
-
-    static TEMPLATES = {
-        TODOLIST: `modules/${this.ID}/templates/playlist-sync.hbs`
-    }
-
-    /**
-     * A small helper function which leverages developer mode flags to gate debug logs.
-     * 
-     * @param {boolean} force - forces the log even if the debug flag is not on
-     * @param  {...any} args - what to log
-     */
-    static log(force, ...args) {  
-        const shouldLog = force || game.modules.get('_dev-mode')?.api?.getPackageDebugValue(this.ID);
-
-        if (shouldLog) {
-        console.log(this.ID, '|', ...args);
-        }
-    }
-
     static pushCompendiumEntriesIntoExistingPlaylists(pack) {
         pack.getDocuments().then(playlists => {
             playlists.forEach(packPlaylist => {
