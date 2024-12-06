@@ -1,5 +1,5 @@
 {
-  "name": "playlist-sync",
+  "id": "playlist-sync",
   "title": "Playlist Compendium Sync",
   "description": "Synchronizes playlists from compendiums to game worlds",
   "authors": [
@@ -10,6 +10,12 @@
   "scripts": [
     "scripts/playlist-sync.js"
   ],
-  "version": "1",
-  "minimumCoreVersion": "0.8.8"
+  "version": "0.0.1",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12"
+  },
+  "url": "https://github.com/thanacus/playlist-sync",
+  "manifest": "https://github.com/thanacus/playlist-sync/releases/download/v0.0.1/module.json",
+  "download": "https://github.com/thanacus/playlist-sync/releases/download/v0.0.1/playlist-sync.zip"
 }
