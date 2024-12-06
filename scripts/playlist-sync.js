@@ -2,39 +2,51 @@ class PlaylistSync {
     static pushCompendiumEntriesIntoExistingPlaylists(pack) {
         pack.getDocuments().then(playlists => {
             playlists.forEach(packPlaylist => {
-                let gamePlaylist = game.playlists.getName(packPlaylist.name);
-                if(typeof gamePlaylist === 'undefined') {
-                    return;
-                }
+                pushCompendiumEntriesIntoExistingPlaylist(packPlaylist)
+            })
+        })
+    }
+    static async pushCompendiumEntriesIntoExistingPlaylist(compendium, playlistDocId) {
+        const packPlaylist = await compendium.collection.getDocument(playlistDocId)
+        const gamePlaylist = game.playlists.getName(packPlaylist.name)
 
-                let updatedTrackList = [];
-                packPlaylist.getEmbeddedCollection("PlaylistSound").forEach(sound => {
-                    updatedTrackList.push(sound.clone());
-                })
+        console.log(gamePlaylist)
+        if(typeof gamePlaylist === 'undefined') {
+            ui.notifications.info(`${packPlaylist.name} not found yet in game, importing.`)
+            game.collections.get('Playlist').importFromCompendium(compendium.collection, playlistDocId, {}, {renderSheet: false})
+            return
+        }
 
-                gamePlaylist.deleteEmbeddedDocuments("PlaylistSound", gamePlaylist.sounds.map(s => s.id)).then(() => {
-                    gamePlaylist.createEmbeddedDocuments("PlaylistSound", updatedTrackList).then(() => {
-                        ui.notifications.info(`${gamePlaylist.name} updated from compendium.`);
-                    });
-                });
-            });
-        });
+        let updatedTrackList = []
+        packPlaylist.getEmbeddedCollection("PlaylistSound").forEach(sound => {
+            updatedTrackList.push(sound.clone());
+        })
+
+        gamePlaylist.deleteEmbeddedDocuments("PlaylistSound", gamePlaylist.sounds.map(s => s.id)).then(() => {
+            gamePlaylist.createEmbeddedDocuments("PlaylistSound", updatedTrackList).then(() => {
+                ui.notifications.info(`${gamePlaylist.name} updated from compendium.`)
+            })
+        })
     }
 }
 
-Hooks.on('getCompendiumDirectoryEntryContext', (html, entryOptions) => {
+const entryCallback = (compendium, entryOptions) => {
     entryOptions.push({
         name: "Synchronize to Playlists",
-        callback: (li) => {
-            let packId = $(li).attr("data-pack");
-            let pack = game.packs.get(packId);
-            PlaylistSync.pushCompendiumEntriesIntoExistingPlaylists(pack);
+        callback: (li, a, b) => {
+           $(li).each((idx, folder) => {
+               $(folder).parent().find(".document.playlist").each((idx, item) => {
+                   const compendiumId = compendium.collection.metadata.id
+                   const playlistCompDoc = game.packs.get(compendiumId).index.get(item.dataset.documentId)
+                   PlaylistSync.pushCompendiumEntriesIntoExistingPlaylist(compendium, item.dataset.documentId);
+               })
+           })
         },
         icon: '<i class="fas fa-music"></i>',
         condition: (li) => {
-            let packId = $(li).attr("data-pack");
-            let pack = game.packs.get(packId);
-            return game.user.isGM && pack.metadata.type === 'Playlist';
+           return game.user.isGM && compendium.collection.metadata.type === 'Playlist'
         }
     });
-});
+}
+
+Hooks.on('getDirectoryApplicationFolderContext', entryCallback)
