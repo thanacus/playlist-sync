@@ -9,6 +9,10 @@ name: Alchemist Import CI
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     steps:
     - uses: actions/checkout@v2
     - name: Get Version                                   # Run the script that returns the version from `module.json`
@@ -18,11 +22,6 @@ jobs:
     - run: zip -r ./playlist-sync.zip module.json scripts/ README.md LICENSE
     - name: Create Release                                # Create an additional release for this version
       id: create_release
-      runs-on: ubuntu-latest
-      permissions:
-        contents: write
-        pull-requests: write
-        repository-projects: write
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
