@@ -10,12 +10,12 @@
   "scripts": [
     "scripts/playlist-sync.js"
   ],
-  "version": "0.0.3",
+  "version": "0.0.4",
   "compatibility": {
     "minimum": "12",
     "verified": "12"
   },
   "url": "https://github.com/thanacus/playlist-sync",
-  "manifest": "https://github.com/thanacus/playlist-sync/releases/download/v0.0.3/module.json",
-  "download": "https://github.com/thanacus/playlist-sync/releases/download/v0.0.3/playlist-sync.zip"
+  "manifest": "https://github.com/thanacus/playlist-sync/releases/download/v0.0.4/module.json",
+  "download": "https://github.com/thanacus/playlist-sync/releases/download/v0.0.4/playlist-sync.zip"
 }

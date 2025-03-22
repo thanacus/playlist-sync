@@ -44,7 +44,7 @@ const entryCallback = (compendium, entryOptions) => {
         },
         icon: '<i class="fas fa-music"></i>',
         condition: (li) => {
-           return game.user.isGM && compendium.collection.metadata.type === 'Playlist'
+           return game.user.isGM && compendium?.collection?.metadata?.type === 'Playlist'
         }
     });
 }
